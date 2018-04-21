@@ -1,0 +1,33 @@
+plugins {
+    id 'java'
+    id 'distribution'
+    id 'org.springframework.boot' version '2.0.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.4.RELEASE'
+    id 'com.palantir.docker' version '0.19.2'
+}
+
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+group = 'yisoft'
+version = '0.0.2-SNAPSHOT'
+
+jar {
+    baseName = 'eshop-orderservice'
+}
+
+repositories {
+	jcenter()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb")	
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+docker {
+    name "${project.group}/${jar.baseName}:${jar.version}"
+    copySpec.from("build/libs").into("/")
+    buildArgs(['JAR_FILE': "${jar.baseName}-${jar.version}.jar"])
+}
